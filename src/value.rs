@@ -20,6 +20,14 @@ impl ValueArray {
     }
 
     pub fn print_value(&self, idx: usize) {
-        print!("{}", self.values[idx]);
+        print_value(self.values[idx]);
     }
+
+    pub fn read_constant(&self, idx: usize) -> Value {
+        self.values[idx]
+    }
+}
+
+pub fn print_value(value: Value) {
+    print!("{}", value);
 }

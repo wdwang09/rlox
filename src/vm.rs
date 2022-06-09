@@ -1,15 +1,18 @@
 use crate::chunk;
+use crate::compiler;
 use crate::value;
 
 pub enum InterpretResult {
     InterpretOk,
     InterpretCompileError,
-    // InterpretRuntimeError,
+    InterpretRuntimeError,
 }
 
 const STACK_SIZE: usize = 256;
 
 pub struct VM {
+    compiler: compiler::Compiler,
+    // ===
     chunk: chunk::Chunk,
     ip: usize,
     stack: [value::Value; STACK_SIZE],
@@ -19,6 +22,8 @@ pub struct VM {
 impl VM {
     pub fn new() -> VM {
         VM {
+            compiler: compiler::Compiler::new(),
+            // ===
             chunk: chunk::Chunk::new(),
             ip: 0,
             stack: [0 as value::Value; STACK_SIZE],
@@ -26,7 +31,12 @@ impl VM {
         }
     }
 
-    pub fn interpret(&mut self, chunk: chunk::Chunk) -> InterpretResult {
+    pub fn interpret(&mut self, source: String) -> InterpretResult {
+        self.compiler.compile(source);
+        return InterpretResult::InterpretOk;
+    }
+
+    pub fn interpret_chunk(&mut self, chunk: chunk::Chunk) -> InterpretResult {
         self.chunk = chunk;
         self.ip = 0;
         return self.run();
